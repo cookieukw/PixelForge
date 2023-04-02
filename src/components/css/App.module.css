@@ -1,0 +1,16 @@
+#mainLayout {
+  min-height: 100vh;
+}
+
+#projetLayout {
+  flex-direction: column;
+}
+#projectBar p {
+  font-size: 1.3rem;
+}
+
+#projectBar {
+  padding: 1rem;
+  justify-content: space-around;
+  align-items: center ;
+}

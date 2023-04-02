@@ -1,0 +1,32 @@
+.project_base {
+background: #46449A;
+border-radius: 0.9rem;
+display:flex;
+flex-direction: row;
+margin: 2px 5px 2px 5px;
+width: auto;
+box-sizing: border-box;
+padding: .7rem;
+margin: .6rem;
+justify-content: flex-start ;
+align-items: flex-start ;
+}
+
+.project_image {
+  width: 60px;
+  height: 60px;
+  border-radius: 0.7rem;
+  background: black;
+  padding: 0;
+  margin-right: 0.8rem;
+}
+
+.project_title h3 {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.project_date p {
+  font-size: 0.7rem;
+  color: #FF8600;
+}
