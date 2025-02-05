@@ -28,14 +28,15 @@ jobs:
         with:
           distribution: "adopt"
           java-version: "17"
+          cache: 'gradle'
 
       - name: Print Java version
         run: java -version
         
-      - name: Install Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-         gradle-version: 8.5
+      #- name: Install Gradle
+      #  uses: gradle/gradle-build-action@v2
+      #  with:
+      #  gradle-version: 8.5
 
       - name: Decode Keystore from Base64
         run: echo "${{ secrets.COOKIE_KEY }}" | base64 --decode > ${{ github.workspace }}/cookie.keystore
