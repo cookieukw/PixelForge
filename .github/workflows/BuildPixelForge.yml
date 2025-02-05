@@ -31,11 +31,11 @@ jobs:
 
       - name: Print Java version
         run: java -version
-
+        
       - name: Install Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          gradle-version: 7.3
+        gradle-version: 8.5
 
       - name: Decode Keystore from Base64
         run: echo "${{ secrets.COOKIE_KEY }}" | base64 --decode > ${{ github.workspace }}/cookie.keystore
@@ -74,7 +74,7 @@ jobs:
           cd android
           ./gradlew bundleRelease
           ./gradlew assembleRelease
-
+    
       - name: Create draft release
         uses: softprops/action-gh-release@v1
         with:
