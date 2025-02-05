@@ -1,0 +1,43 @@
+  // Adiciona estilos fixos uma vez ao montar o componente
+    //animações customizadas
+    
+    useEffect(() => {
+        const style = document.createElement("style");
+        style.innerHTML = `
+      .customBounce { 
+        animation-name: customBounce;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear; 
+      }
+      .customShake { 
+        animation-name: customShake;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear; 
+      }
+      .customFlip { 
+        animation-name: customFlip;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear; 
+      }
+    `;
+        document.head.appendChild(style);
+
+        return () => {
+            document.head.removeChild(style);
+        };
+    }, []);
+    
+*/
+    /*
+    const updateDynamicKeyframes = useCallback(() => {
+        const styleTag = document.getElementById("dynamic-keyframes");
+        if (styleTag) {
+            if (currentAnimation === "none") {
+                styleTag.innerHTML = "";
+            } else {
+                const definition = animationDefinitions[currentAnimation];
+                styleTag.innerHTML = definition.keyframes(intensity);
+            }
+        }
+    }, [currentAnimation, intensity]);
+        //    updateDynamicKeyframes();

@@ -1,0 +1,41 @@
+@import "src/md3/theme.css";
+
+ion-input {
+    --color: #fff;
+    --placeholder-color: #0589f5;
+    --placeholder-opacity: 0.8;
+    --border-radius: 56px;
+    --border: 1px solid white;
+}
+
+ion-input.label-floating {
+    --highlight-color: rgb(255, 255, 255);
+}
+/* Remove a barra de rolagem globalmente */
+html,
+body,
+ion-content {
+    /* Esconder barras de rolagem */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE e Edge */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+ion-content::-webkit-scrollbar {
+    display: none; /* Chrome, Safari e Opera */
+}
+
+ion-segment {
+    --background: #151a3f;
+    --ion-text-color-rgb: rgb(255, 255, 255);
+}
+ion-segment * {
+    --color: rgb(255, 255, 255);
+    color: white;
+}
+
+.animate__animated {
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}

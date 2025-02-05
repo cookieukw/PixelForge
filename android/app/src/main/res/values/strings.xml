@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PixelForge</string>
+    <string name="title_activity_main">PixelForge</string>
+    <string name="package_name">PixelForge</string>
+    <string name="custom_url_scheme">PixelForge</string>
+    <string name="admob_app_id">ca-app-pub-3239733554197124~3041136895</string>
+    
+</resources>
