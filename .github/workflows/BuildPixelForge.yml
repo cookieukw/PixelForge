@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Node.js environment
         uses: actions/setup-node@v2
@@ -23,12 +23,21 @@ jobs:
           npm install
           npx cap init android
 
-      - name: Install Java JDK
-        uses: actions/setup-java@v2
+
+      - name: Set Up JDK
+        uses: actions/setup-java@v4
         with:
-          distribution: "adopt"
-          java-version: "17"
+          distribution: 'zulu'
+          java-version: '17'
           cache: 'gradle'
+          
+          
+      #- name: Install Java JDK
+      #  uses: actions/setup-java@v2
+      #  with:
+      #  distribution: "adopt"
+      #  java-version: "17"
+      #  cache: 'gradle'
 
       - name: Print Java version
         run: java -version
