@@ -1,7 +1,7 @@
 import {
     AdMob,
     AdOptions,
-    AdLoadInfo,
+  //  AdLoadInfo,
     InterstitialAdPluginEvents,
     AdmobConsentStatus
 } from "@capacitor-community/admob";
