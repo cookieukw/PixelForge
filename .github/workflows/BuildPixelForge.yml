@@ -3,7 +3,7 @@ name: Build
 on:
   release:
     types:
-      - created
+      [created, edited]
 
 jobs:
   setup-capacitor-environment:
@@ -23,11 +23,9 @@ jobs:
           npm install
           npx cap init android
 
-
-  
       - name: Set up JDK 21
         uses: actions/setup-java@v3
-         with:
+        with:
            distribution: 'temurin'
            java-version: '21'
           
