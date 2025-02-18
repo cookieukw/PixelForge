@@ -8,7 +8,7 @@
         "build": "tsc -b && vite build",
         "lint": "eslint .",
         "preview": "vite preview",
-        "fcm": "git add . && git commit -m \"#\" && git push origin main"
+        "fstcmmt": "git add . && git commit -m \"#\" && git push origin main"
     },
     "dependencies": {
         "@capacitor-community/admob": "^7.0.0-0",
