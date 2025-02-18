@@ -1,5 +1,5 @@
 import { IonSegment, IonSegmentButton, IonLabel } from "@ionic/react";
-import { AnimationDefinition} from "../classes/types"
+import { AnimationDefinition } from "../classes/types";
 interface AnimationSelectorProps {
     currentAnimation: string;
     animationDefs: Record<string, AnimationDefinition>;
@@ -12,7 +12,7 @@ export const AnimationSelector: React.FC<AnimationSelectorProps> = ({
     onSelect
 }) => (
     <IonSegment
-    scrollable={true} 
+        scrollable={true}
         color="tertiary"
         value={currentAnimation}
         onIonChange={e => onSelect(e.detail.value as string)}

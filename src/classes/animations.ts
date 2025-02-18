@@ -7,7 +7,7 @@ export interface AnimationDefinition {
 
 export const animationDefinitions: Record<string, AnimationDefinition> = {
     none: {
-        animateClass: "",
+        animateClass: "__",
         baseDuration: 1,
         description: "Nenhuma animação está aplicada.",
         keyframes: () => ""

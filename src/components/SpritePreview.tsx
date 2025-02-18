@@ -1,39 +1,43 @@
-
-import { ForwardedRef, forwardRef } from 'react';
+import { ForwardedRef, forwardRef } from "react";
 
 interface SpritePreviewProps {
-  spriteSrc: string;
+    spriteSrc: string;
+    backgroundColor?: string;
 }
 
 export const SpritePreview = forwardRef<HTMLImageElement, SpritePreviewProps>(
-  ({ spriteSrc }, ref: ForwardedRef<HTMLImageElement>) => (
-    <div 
-      id="sprite-preview" 
-      style={{
-        width: "150px",
-        height: "150px",
-        backgroundColor: "#ddd",
-        margin: "10px auto",
-        border: "2px solid #333",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        overflow: "hidden"
-      }}
-    >
-      {spriteSrc ? (
-        <img
-          ref={ref}
-          src={spriteSrc}
-          alt="Sprite"
-          style={{ maxWidth: '100%', maxHeight: '100%' }}
-        />
-      ) : (
-        <p>Sem Sprite</p>
-      )}
-    </div>
-  )
+    ({ spriteSrc, backgroundColor }, ref: ForwardedRef<HTMLImageElement>) => (
+        <div
+            id="sprite-preview"
+            style={{
+                width: "160px",
+                height: "160px",
+                backgroundColor,
+                margin: "10px auto",
+                border: "2px solid #333",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                overflow: "hidden"
+            }}
+        >
+            {spriteSrc ? (
+                <img
+                    ref={ref}
+                    src={spriteSrc}
+                    alt="Sprite"
+                    style={{
+                        paddingTop: "20px",
+                        maxWidth: "100%",
+                        maxHeight: "100%"
+                    }}
+                />
+            ) : (
+                <p>Sem Sprite</p>
+            )}
+        </div>
+    )
 );
 
 // Adiciona display name para melhor debugging
-SpritePreview.displayName = 'SpritePreview';
+SpritePreview.displayName = "SpritePreview";
