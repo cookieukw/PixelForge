@@ -1,9 +1,9 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import { ChromePicker } from "react-color";
 
 interface ColorPickerProps {
     color: string;
-    onChangeComplete: (color: string) => void;
+    onChangeComplete: (color: any) => void;
 }
 
 const ColorPicker = memo(({ color, onChangeComplete }: ColorPickerProps) => {

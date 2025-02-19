@@ -1,6 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { animationDefinitions } from "../classes/animations";
-import { useSpriteFile } from "./useSpriteFile";
 
 const validClasses = Object.values(animationDefinitions)
     .map(a => a.animateClass)
@@ -10,7 +9,6 @@ export const useAnimation = (spriteRef: React.RefObject<HTMLImageElement>) => {
     const [currentAnimation, setCurrentAnimation] = useState<string>("none");
     const [speed, setSpeed] = useState<number>(1);
 
-    const { spriteSrc } = useSpriteFile();
     useEffect(() => {
         if (spriteRef.current) {
             const element = spriteRef.current;

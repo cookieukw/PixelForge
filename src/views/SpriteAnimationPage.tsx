@@ -1,4 +1,4 @@
-import { useRef, useCallback, useState, useEffect } from "react";
+import { useRef, useCallback, useState } from "react";
 
 import {
     IonProgressBar,
@@ -13,9 +13,11 @@ import {
     useIonViewWillEnter
 } from "@ionic/react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
+
+import "swiper/swiper-bundle.css";
+
+//import "swiper/css/pagination";
+//import "swiper/css/navigation";
 import { Pagination, Navigation } from "swiper/modules";
 import { initializeAdmob, showInterstitial } from "../classes/admob";
 import ColorPicker from "../components/ColorPicker";
@@ -35,6 +37,10 @@ const SpriteAnimationPage: React.FC = () => {
         setSpeed,
         animationDefs
     } = useAnimation(spriteRef);
+
+    const { spriteSrc, handleFileChange } = useSpriteFile();
+    const [backgroundColor, setBackgroundColor] =
+        useState<string>("transparent");
     const {
         canvasRef,
         exportSpritesheet,
@@ -42,11 +48,7 @@ const SpriteAnimationPage: React.FC = () => {
         exportProgress,
         resolutionScale,
         setResolutionScale
-    } = useSpriteCapture();
-
-    const { spriteSrc, handleFileChange } = useSpriteFile();
-    const [backgroundColor, setBackgroundColor] =
-        useState<string>("transparent");
+    } = useSpriteCapture(backgroundColor);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const openFilePicker = useCallback(() => {
