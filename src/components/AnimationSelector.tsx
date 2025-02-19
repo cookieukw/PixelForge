@@ -13,12 +13,12 @@ export const AnimationSelector: React.FC<AnimationSelectorProps> = ({
 }) => (
     <IonSegment
         scrollable={true}
-        color="tertiary"
+        color="primary"
         value={currentAnimation}
         onIonChange={e => onSelect(e.detail.value as string)}
     >
         {Object.keys(animationDefs).map(key => (
-            <IonSegmentButton color="tertiary" key={key} value={key}>
+            <IonSegmentButton color="primary" key={key} value={key}>
                 <IonLabel>
                     {key.charAt(0).toUpperCase() + key.slice(1)}
                 </IonLabel>

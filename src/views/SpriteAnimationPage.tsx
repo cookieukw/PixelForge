@@ -10,7 +10,10 @@ import {
     IonLabel,
     IonContent,
     IonButton,
-    useIonViewWillEnter
+    useIonViewWillEnter,
+    IonHeader,
+    IonToolbar,
+    IonTitle
 } from "@ionic/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -61,6 +64,33 @@ const SpriteAnimationPage: React.FC = () => {
     });
     return (
         <IonPage>
+            <IonHeader
+                style={{
+                    display: "none"
+                }}
+            >
+                <IonToolbar
+                    style={{
+                        fontSize: "10px",
+                        padding: 0,
+                        margin: 0,
+                        "--background": "#0f0326",
+                        "--color": "white",
+                        borderTop: "1px solid white",
+                        textAlign: "center"
+                    }}
+                >
+                    <IonTitle
+                        style={{
+                            margin: 0,
+                            fontSize: "10px",
+                            padding: 0
+                        }}
+                    >
+                        PixelForge{" "}
+                    </IonTitle>
+                </IonToolbar>
+            </IonHeader>
             <IonContent className="ion-padding">
                 <style id="dynamic-keyframes"></style>
 
