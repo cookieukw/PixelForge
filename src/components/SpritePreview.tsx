@@ -10,9 +10,9 @@ export const SpritePreview = forwardRef<HTMLImageElement, SpritePreviewProps>(
         <div
             id="sprite-preview"
             style={{
+                backgroundColor,
                 width: "160px",
                 height: "160px",
-                backgroundColor,
                 margin: "10px auto",
                 border: "2px solid #333",
                 display: "flex",
@@ -27,7 +27,6 @@ export const SpritePreview = forwardRef<HTMLImageElement, SpritePreviewProps>(
                     src={spriteSrc}
                     alt="Sprite"
                     style={{
-                        paddingTop: "20px",
                         maxWidth: "100%",
                         maxHeight: "100%"
                     }}

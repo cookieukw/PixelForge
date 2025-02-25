@@ -1,4 +1,4 @@
-import { useRef, useCallback, useState } from "react";
+import { useRef, useCallback, useState, useEffect } from "react";
 
 import {
     IonProgressBar,
@@ -8,12 +8,14 @@ import {
     IonPage,
     IonList,
     IonLabel,
+    IonToggle,
     IonContent,
     IonButton,
     useIonViewWillEnter,
     IonHeader,
     IonToolbar,
-    IonTitle
+    IonTitle,
+    ToggleCustomEvent
 } from "@ionic/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -21,6 +23,7 @@ import "swiper/swiper-bundle.css";
 
 //import "swiper/css/pagination";
 //import "swiper/css/navigation";
+import { useTheme } from "../hooks/useTheme";
 import { Pagination, Navigation } from "swiper/modules";
 import { initializeAdmob, showInterstitial } from "../classes/admob";
 import ColorPicker from "../components/ColorPicker";
@@ -31,6 +34,7 @@ import { AnimationSelector } from "../components/AnimationSelector";
 import { SpritePreview } from "../components/SpritePreview";
 import { AnimationControls } from "../components/AnimationControls";
 
+import { StatusBar, Style } from "@capacitor/status-bar";
 const SpriteAnimationPage: React.FC = () => {
     const spriteRef = useRef<HTMLImageElement>(null);
     const {
@@ -41,6 +45,10 @@ const SpriteAnimationPage: React.FC = () => {
         animationDefs
     } = useAnimation(spriteRef);
 
+    const { isDarkMode, toggleTheme } = useTheme();
+    const handleThemeToggle = (event: ToggleCustomEvent) => {
+        toggleTheme(event.detail.checked);
+    };
     const { spriteSrc, handleFileChange } = useSpriteFile();
     const [backgroundColor, setBackgroundColor] =
         useState<string>("transparent");
@@ -62,20 +70,40 @@ const SpriteAnimationPage: React.FC = () => {
         initializeAdmob();
         showInterstitial();
     });
+    useEffect(() => {
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+        const handleSystemThemeChange = (e: MediaQueryListEvent) => {
+            if (!localStorage.getItem("theme")) {
+                toggleTheme(e.matches);
+            }
+        };
+
+        // Listener para mudanças no sistema
+        mediaQuery.addEventListener("change", handleSystemThemeChange);
+
+        return () => {
+            mediaQuery.removeEventListener("change", handleSystemThemeChange);
+        };
+    }, []);
+
+    useIonViewWillEnter(() => {
+        StatusBar.setStyle({
+            style: isDarkMode ? Style.Dark : Style.Light
+        });
+        StatusBar.setBackgroundColor({
+            color: isDarkMode ? "#1a1a1a" : "#ffffff"
+        });
+    });
     return (
-        <IonPage>
-            <IonHeader
-                style={{
-                    display: "none"
-                }}
-            >
+        <IonPage className="ion-padding" >
+            <IonHeader>
                 <IonToolbar
                     style={{
-                        fontSize: "10px",
+                        //  fontSize: "10px",
                         padding: 0,
                         margin: 0,
-                        "--background": "#0f0326",
-                        "--color": "white",
+
                         borderTop: "1px solid white",
                         textAlign: "center"
                     }}
@@ -83,7 +111,7 @@ const SpriteAnimationPage: React.FC = () => {
                     <IonTitle
                         style={{
                             margin: 0,
-                            fontSize: "10px",
+
                             padding: 0
                         }}
                     >
@@ -139,25 +167,6 @@ const SpriteAnimationPage: React.FC = () => {
                             />
 
                             <IonItem>
-                                <IonLabel>Escala de Resolução</IonLabel>
-                                <IonSelect
-                                    value={resolutionScale}
-                                    onIonChange={e =>
-                                        setResolutionScale(e.detail.value)
-                                    }
-                                >
-                                    <IonSelectOption value="nearest">
-                                        Nearest
-                                    </IonSelectOption>
-                                    <IonSelectOption value="hqx">
-                                        HQX (4x Pixel Art)
-                                    </IonSelectOption>
-                                    <IonSelectOption value="xbrz">
-                                        xBRZ (4x Suave)
-                                    </IonSelectOption>
-                                </IonSelect>
-                            </IonItem>
-                            <IonItem>
                                 <IonLabel>Resolução</IonLabel>
                                 <IonSelect
                                     value={resolutionScale}
@@ -188,6 +197,18 @@ const SpriteAnimationPage: React.FC = () => {
                                         setBackgroundColor(color.hex)
                                     }
                                 />
+                            </IonItem>
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <IonItem>
+                                <IonToggle
+                                    checked={isDarkMode}
+                                    onIonChange={handleThemeToggle}
+                                    slot="end"
+                                    enableOnOffLabels={true}
+                                >
+                                    Modo escuro
+                                </IonToggle>
                             </IonItem>
                         </SwiperSlide>
                     </Swiper>
