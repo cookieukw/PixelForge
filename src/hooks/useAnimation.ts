@@ -16,7 +16,7 @@ export const useAnimation = (spriteRef: React.RefObject<HTMLImageElement>) => {
 
             element.classList.remove(...validClasses);
             element.classList.add(definition.animateClass);
-            element.classList.add("animate__animated");
+            element.classList.add("animate__animated","animate__infinite");
 
             /* Força reflow apenas se for uma animação válida
             if (currentAnimation !== "none") {
