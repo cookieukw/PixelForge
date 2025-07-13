@@ -1,253 +1,213 @@
-import { useRef, useCallback, useState, useEffect } from "react";
+// src/pages/SpriteAnimationPage.tsx
 
-import {
-    IonProgressBar,
-    IonSelect,
-    IonSelectOption,
-    IonItem,
-    IonPage,
-    IonList,
-    IonLabel,
-    IonToggle,
-    IonContent,
-    IonButton,
-    useIonViewWillEnter,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    ToggleCustomEvent
-} from "@ionic/react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { useRef, useState } from "react";
 
-import "swiper/swiper-bundle.css";
-
-//import "swiper/css/pagination";
-//import "swiper/css/navigation";
-import { useTheme } from "../hooks/useTheme";
-import { Pagination, Navigation } from "swiper/modules";
-import { initializeAdmob, showInterstitial } from "../classes/admob";
-import ColorPicker from "../components/ColorPicker";
 import { useAnimation } from "../hooks/useAnimation";
 import { useSpriteFile } from "../hooks/useSpriteFile";
 import { useSpriteCapture } from "../hooks/useSpriteCapture";
+
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Progress } from "@/components/ui/progress";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { AnimationSelector } from "../components/AnimationSelector";
-import { SpritePreview } from "../components/SpritePreview";
 import { AnimationControls } from "../components/AnimationControls";
+import { SpritePreview } from "../components/SpritePreview";
+import ColorPicker from "../components/ColorPicker";
 
-import { StatusBar, Style } from "@capacitor/status-bar";
-const SpriteAnimationPage: React.FC = () => {
-    const spriteRef = useRef<HTMLImageElement>(null);
-    const {
-        currentAnimation,
-        speed,
-        setCurrentAnimation,
-        setSpeed,
-        animationDefs
-    } = useAnimation(spriteRef);
+import {
+  Sun,
+  Moon,
+  Palette,
+  Settings,
+  Image as ImageIcon,
+  Download,
+} from "lucide-react";
+import { useTheme } from "@/context/themeContext";
 
-    const { isDarkMode, toggleTheme } = useTheme();
-    const handleThemeToggle = (event: ToggleCustomEvent) => {
-        toggleTheme(event.detail.checked);
-    };
-    const { spriteSrc, handleFileChange } = useSpriteFile();
-    const [backgroundColor, setBackgroundColor] =
-        useState<string>("transparent");
-    const {
-        canvasRef,
-        exportSpritesheet,
-        isExporting,
-        exportProgress,
-        resolutionScale,
-        setResolutionScale
-    } = useSpriteCapture(backgroundColor);
-    const fileInputRef = useRef<HTMLInputElement>(null);
+export function SpriteAnimationPage() {
+  const spriteRef = useRef<HTMLImageElement>(null);
 
-    const openFilePicker = useCallback(() => {
-        fileInputRef.current?.click();
-    }, []);
+  // Mantendo todos os seus hooks e lógica de estado
+  const {
+    currentAnimation,
+    speed,
+    setCurrentAnimation,
+    setSpeed,
+    animationDefs,
+  } = useAnimation(spriteRef);
+  const { setTheme, theme } = useTheme();
+  const { spriteSrc, handleFileChange } = useSpriteFile();
+  const [backgroundColor, setBackgroundColor] = useState<string>("transparent");
+  const {
+    canvasRef,
+    exportSpritesheet,
+    isExporting,
+    exportProgress,
+    resolutionScale,
+    setResolutionScale,
+  } = useSpriteCapture(backgroundColor);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-    useIonViewWillEnter(() => {
-        initializeAdmob();
-        showInterstitial();
-    });
-    useEffect(() => {
-        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const toggleTheme = (checked: boolean) => {
+    setTheme(checked ? "dark" : "light");
+    console.log("[SpriteAnimationPage] Tema alterado:", checked ? "dark" : "light");
+  };
+  return (
+    // O layout principal agora usa divs com Tailwind CSS
+    <div className="container mx-auto p-4 sm:p-6 lg:p-8">
+      <header className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold tracking-tight">PixelForge</h1>
+        <div className="flex items-center space-x-2">
+          <Sun className="h-5 w-5" />
+          <Switch
+            checked={theme === "dark"}
+            onCheckedChange={toggleTheme} // O Switch passa o booleano diretamente
+          />
+          <Moon className="h-5 w-5" />
+        </div>
+      </header>
 
-        const handleSystemThemeChange = (e: MediaQueryListEvent) => {
-            if (!localStorage.getItem("theme")) {
-                toggleTheme(e.matches);
-            }
-        };
-
-        // Listener para mudanças no sistema
-        mediaQuery.addEventListener("change", handleSystemThemeChange);
-
-        return () => {
-            mediaQuery.removeEventListener("change", handleSystemThemeChange);
-        };
-    }, []);
-
-    useIonViewWillEnter(() => {
-        StatusBar.setStyle({
-            style: isDarkMode ? Style.Dark : Style.Light
-        });
-        StatusBar.setBackgroundColor({
-            color: isDarkMode ? "#1a1a1a" : "#ffffff"
-        });
-    });
-    return (
-        <IonPage className="ion-padding" >
-            <IonHeader>
-                <IonToolbar
-                    style={{
-                        //  fontSize: "10px",
-                        padding: 0,
-                        margin: 0,
-
-                        borderTop: "1px solid white",
-                        textAlign: "center"
-                    }}
-                >
-                    <IonTitle
-                        style={{
-                            margin: 0,
-
-                            padding: 0
-                        }}
-                    >
-                        PixelForge{" "}
-                    </IonTitle>
-                </IonToolbar>
-            </IonHeader>
-            <IonContent className="ion-padding">
-                <style id="dynamic-keyframes"></style>
-
-                <AnimationSelector
-                    currentAnimation={currentAnimation}
-                    animationDefs={animationDefs}
-                    onSelect={setCurrentAnimation}
-                />
-
-                <div
-                    style={{
-                        textAlign: "center"
-                    }}
-                >
-                    <p
-                        style={{
-                            lineHeight: "2.5ex",
-                            fontSize: "16px",
-                            height: "7.5ex",
-                            overflow: "hidden"
-                        }}
-                    >
-                        {animationDefs[currentAnimation].description}
-                    </p>
-                </div>
-
+      <main className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Coluna da Esquerda (Preview e Ações) */}
+        <div className="lg:col-span-2 space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="capitalize">{currentAnimation}</CardTitle>
+              <CardDescription className="h-12">
+                {animationDefs[currentAnimation].description}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {/* O AnimationSelector é chamado aqui dentro */}
+              <AnimationSelector
+                currentAnimation={currentAnimation}
+                animationDefs={animationDefs}
+                onSelect={setCurrentAnimation}
+              />
+              <div className="mt-4">
                 <SpritePreview
-                    key={spriteSrc}
-                    spriteSrc={spriteSrc}
-                    ref={spriteRef}
-                    backgroundColor={backgroundColor}
+                  spriteSrc={spriteSrc}
+                  ref={spriteRef}
+                  backgroundColor={backgroundColor}
                 />
-                <IonList className="ion-margin-vertical">
-                    <Swiper
-                        className="swiper-no-swiping"
-                        pagination={{
-                            dynamicBullets: true
-                        }}
-                        navigation={true}
-                        modules={[Pagination, Navigation]}
-                    >
-                        <SwiperSlide>
-                            <AnimationControls
-                                speed={speed}
-                                onSpeedChange={setSpeed}
-                            />
+              </div>
+            </CardContent>
+          </Card>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Button
+              onClick={() => fileInputRef.current?.click()}
+              variant="outline"
+              size="lg"
+            >
+              <ImageIcon className="mr-2 h-4 w-4" />
+              Selecionar Sprite
+            </Button>
+            <Button
+              onClick={exportSpritesheet}
+              disabled={isExporting || !spriteSrc}
+              size="lg"
+            >
+              <Download className="mr-2 h-4 w-4" />
+              {isExporting
+                ? `Exportando... (${Math.round(exportProgress)}%)`
+                : "Exportar Sprite Sheet"}
+            </Button>
+          </div>
+          {isExporting && (
+            <Progress value={exportProgress} className="w-full" />
+          )}
+        </div>
 
-                            <IonItem>
-                                <IonLabel>Resolução</IonLabel>
-                                <IonSelect
-                                    value={resolutionScale}
-                                    onIonChange={e =>
-                                        setResolutionScale(e.detail.value)
-                                    }
-                                >
-                                    <IonSelectOption value={0.5}>
-                                        Baixa (0.5x)
-                                    </IonSelectOption>
-                                    <IonSelectOption value={1}>
-                                        Original (1x)
-                                    </IonSelectOption>
-                                    <IonSelectOption value={2}>
-                                        Alta (2x)
-                                    </IonSelectOption>
-                                    <IonSelectOption value={4}>
-                                        Máxima (4x)
-                                    </IonSelectOption>
-                                </IonSelect>
-                            </IonItem>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <IonItem>
-                                <ColorPicker
-                                    color={backgroundColor}
-                                    onChangeComplete={color =>
-                                        setBackgroundColor(color.hex)
-                                    }
-                                />
-                            </IonItem>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <IonItem>
-                                <IonToggle
-                                    checked={isDarkMode}
-                                    onIonChange={handleThemeToggle}
-                                    slot="end"
-                                    enableOnOffLabels={true}
-                                >
-                                    Modo escuro
-                                </IonToggle>
-                            </IonItem>
-                        </SwiperSlide>
-                    </Swiper>
-                </IonList>
-                {isExporting && (
-                    <IonProgressBar
-                        value={exportProgress / 100}
-                        color="primary"
-                    />
-                )}
-                <IonButton
-                    expand="block"
-                    onClick={exportSpritesheet}
-                    disabled={isExporting || !spriteSrc}
-                >
-                    {isExporting ? "Exportando..." : "Exportar Sprite Sheet"}
-                </IonButton>
-                <IonButton
-                    disabled={isExporting}
-                    className="ion-padding"
-                    shape="round"
-                    expand="block"
-                    onClick={openFilePicker}
-                >
-                    Selecionar Sprite
-                </IonButton>
+        {/* Coluna da Direita (Controles em Abas) */}
+        <div className="lg:col-span-1">
+          <Tabs defaultValue="controls" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="controls">
+                <Settings className="mr-2 h-4 w-4" />
+                Ajustes
+              </TabsTrigger>
+              <TabsTrigger value="color">
+                <Palette className="mr-2 h-4 w-4" />
+                Cores
+              </TabsTrigger>
+            </TabsList>
 
-                <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    style={{ display: "none" }}
-                    onChange={handleFileChange}
-                />
+            <TabsContent value="controls">
+              {/* O componente AnimationControls já tem um Card, então ele funciona bem aqui. */}
+              <AnimationControls speed={speed} onSpeedChange={setSpeed} />
 
-                <canvas ref={canvasRef} style={{ display: "none" }} />
-            </IonContent>
-        </IonPage>
-    );
-};
+              {/* Adicionamos a Resolução em outro Card, logo abaixo, na mesma aba. */}
+              <Card className="mt-6">
+                <CardHeader>
+                  <CardTitle>Resolução da Exportação</CardTitle>
+                </CardHeader>
+                <CardContent>
+               
+                  <Select
+                    value={String(resolutionScale)}
+                    onValueChange={(value) =>
+                      setResolutionScale(Number(value) as any)
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione a resolução" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0.5">Baixa (0.5x)</SelectItem>
+                      <SelectItem value="1">Original (1x)</SelectItem>
+                      <SelectItem value="2">Alta (2x)</SelectItem>
+                      <SelectItem value="4">Máxima (4x)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="color">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Cor de Fundo</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ColorPicker
+                    color={backgroundColor}
+                    onChangeComplete={(color) => setBackgroundColor(color.hex)}
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </main>
+
+      {/* Elementos escondidos permanecem os mesmos */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleFileChange}
+      />
+      <canvas ref={canvasRef} className="hidden" />
+    </div>
+  );
+}
 
 export default SpriteAnimationPage;
