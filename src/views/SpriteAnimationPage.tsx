@@ -37,6 +37,7 @@ import {
   Settings,
   Image as ImageIcon,
   Download,
+  Clapperboard,
 } from "lucide-react";
 import { useTheme } from "@/context/themeContext";
 
@@ -56,6 +57,7 @@ export function SpriteAnimationPage() {
   const {
     canvasRef,
     exportSpritesheet,
+    exportGif,
     isExporting,
     exportProgress,
     resolutionScale,
@@ -106,11 +108,12 @@ export function SpriteAnimationPage() {
               </div>
             </CardContent>
           </Card>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <Button
               onClick={() => fileInputRef.current?.click()}
               variant="outline"
               size="lg"
+              className="sm:col-span-1"
             >
               <ImageIcon className="mr-2 h-4 w-4" />
               Selecionar Sprite
@@ -119,11 +122,22 @@ export function SpriteAnimationPage() {
               onClick={exportSpritesheet}
               disabled={isExporting || !spriteSrc}
               size="lg"
+              variant="secondary"
             >
               <Download className="mr-2 h-4 w-4" />
               {isExporting
                 ? `Exportando... (${Math.round(exportProgress)}%)`
-                : "Exportar Sprite Sheet"}
+                : "Exportar PNG"}
+            </Button>
+            <Button
+              onClick={exportGif}
+              disabled={isExporting || !spriteSrc}
+              size="lg"
+            >
+              <Clapperboard className="mr-2 h-4 w-4" />
+              {isExporting
+                ? `Gerando GIF... (${Math.round(exportProgress)}%)`
+                : "Exportar GIF"}
             </Button>
           </div>
           {isExporting && (
