@@ -1,4 +1,5 @@
 import { ForwardedRef, forwardRef, memo, useState } from "react";
+import { useTranslation } from "../i18n";
 
 interface SpritePreviewProps {
     spriteSrc: string;
@@ -8,6 +9,7 @@ interface SpritePreviewProps {
 export const SpritePreview = memo(
     forwardRef<HTMLImageElement, SpritePreviewProps>(
         ({ spriteSrc, backgroundColor }, ref: ForwardedRef<HTMLImageElement>) => {
+            const { t } = useTranslation();
             const [imgInfo, setImgInfo] = useState<{
                 w: number;
                 h: number;
@@ -25,7 +27,6 @@ export const SpritePreview = memo(
                             alignItems: "center",
                             justifyContent: "center",
                             overflow: "hidden",
-                            /* Deixa o container crescer com a imagem, mas limita o preview a 320px */
                             maxWidth: "320px",
                             maxHeight: "320px",
                             width: "100%",
@@ -67,12 +68,11 @@ export const SpritePreview = memo(
                                         d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                                     />
                                 </svg>
-                                <span className="text-sm">Nenhum sprite carregado</span>
+                                <span className="text-sm">{t("preview.noSprite")}</span>
                             </div>
                         )}
                     </div>
 
-                    {/* Dimensões reais da imagem */}
                     {imgInfo && (
                         <span className="text-xs text-muted-foreground tabular-nums">
                             {imgInfo.w} × {imgInfo.h} px

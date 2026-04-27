@@ -72,7 +72,8 @@ function captureFrameNow(
 
 export const useSpriteCapture = (
     backgroundColor: string = "transparent",
-    imgRef?: React.RefObject<HTMLImageElement>
+    imgRef?: React.RefObject<HTMLImageElement>,
+    t: (key: string, vars?: Record<string, string | number>) => string = (k) => k
 ) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isExporting, setIsExporting] = useState(false);
@@ -181,13 +182,13 @@ export const useSpriteCapture = (
                     directory: Directory.Documents,
                 });
                 await Toast.show({
-                    text: `Salvo em: ${Directory.Documents}/${fileName}`,
+                    text: t("alerts.savedAt", { path: `${Directory.Documents}/${fileName}` }),
                     duration: "long",
                 });
             } catch (error) {
                 console.error("Erro ao salvar:", error);
                 await Toast.show({
-                    text: "Erro ao salvar o arquivo! Verifique as permissões.",
+                    text: t("alerts.saveError"),
                     duration: "long",
                 });
             }
@@ -204,10 +205,9 @@ export const useSpriteCapture = (
         const frames = await captureViaTimeout(SPRITESHEET_FRAMES, 150);
 
         if (!frames.length) {
-            alert("Nenhum frame capturado! Carregue um sprite primeiro.");
+            alert(t("alerts.noFrames"));
             return;
         }
-
         const [first] = frames;
         const frameW = first.width;
         const frameH = first.height;
@@ -243,7 +243,7 @@ export const useSpriteCapture = (
         const { frames, delayMs } = await captureViaRAF(GIF_FRAMES);
 
         if (!frames.length) {
-            alert("Nenhum frame capturado! Carregue um sprite primeiro.");
+            alert(t("alerts.noFrames"));
             return;
         }
 
@@ -281,7 +281,7 @@ export const useSpriteCapture = (
             await saveFile(gif.bytes(), `animation-${Date.now()}.gif`, "image/gif");
         } catch (err) {
             console.error("[useSpriteCapture] Erro ao gerar GIF:", err);
-            alert("Erro ao gerar o GIF. Consulte o console para detalhes.");
+            alert(t("alerts.gifError"));
         } finally {
             setIsExporting(false);
             setExportProgress(0);

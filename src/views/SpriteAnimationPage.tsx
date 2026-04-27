@@ -1,9 +1,9 @@
-
 import { useRef, useState } from "react";
 
 import { useAnimation } from "../hooks/useAnimation";
 import { useSpriteFile } from "../hooks/useSpriteFile";
 import { useSpriteCapture } from "../hooks/useSpriteCapture";
+import { useTranslation } from "../i18n";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -43,6 +43,7 @@ import { useTheme } from "@/context/themeContext";
 
 export function SpriteAnimationPage() {
   const spriteRef = useRef<HTMLImageElement>(null);
+  const { t } = useTranslation();
 
   const {
     currentAnimation,
@@ -63,17 +64,19 @@ export function SpriteAnimationPage() {
     resolutionScale,
     setResolutionScale,
     getExpectedOutputSize,
-  } = useSpriteCapture(backgroundColor, spriteRef);
+  } = useSpriteCapture(backgroundColor, spriteRef, t);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const toggleTheme = (checked: boolean) => {
     setTheme(checked ? "dark" : "light");
-    console.log("[SpriteAnimationPage] Tema alterado:", checked ? "dark" : "light");
   };
+
+  const progressRounded = Math.round(exportProgress);
+
   return (
     <div className="container mx-auto p-4 sm:p-6 lg:p-8">
       <header className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">PixelForge</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{t("header.title")}</h1>
         <div className="flex items-center space-x-2">
           <Sun className="h-5 w-5" />
           <Switch
@@ -90,7 +93,7 @@ export function SpriteAnimationPage() {
             <CardHeader>
               <CardTitle className="capitalize">{currentAnimation}</CardTitle>
               <CardDescription className="h-12">
-                {animationDefs[currentAnimation].description}
+                {t(`animations.${currentAnimation}`)}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -108,6 +111,7 @@ export function SpriteAnimationPage() {
               </div>
             </CardContent>
           </Card>
+
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <Button
               onClick={() => fileInputRef.current?.click()}
@@ -116,7 +120,7 @@ export function SpriteAnimationPage() {
               className="sm:col-span-1"
             >
               <ImageIcon className="mr-2 h-4 w-4" />
-              Selecionar Sprite
+              {t("actions.selectSprite")}
             </Button>
             <Button
               onClick={exportSpritesheet}
@@ -126,8 +130,8 @@ export function SpriteAnimationPage() {
             >
               <Download className="mr-2 h-4 w-4" />
               {isExporting
-                ? `Exportando... (${Math.round(exportProgress)}%)`
-                : "Exportar PNG"}
+                ? t("actions.exporting", { progress: progressRounded })
+                : t("actions.exportPng")}
             </Button>
             <Button
               onClick={exportGif}
@@ -136,10 +140,11 @@ export function SpriteAnimationPage() {
             >
               <Clapperboard className="mr-2 h-4 w-4" />
               {isExporting
-                ? `Gerando GIF... (${Math.round(exportProgress)}%)`
-                : "Exportar GIF"}
+                ? t("actions.generatingGif", { progress: progressRounded })
+                : t("actions.exportGif")}
             </Button>
           </div>
+
           {isExporting && (
             <Progress value={exportProgress} className="w-full" />
           )}
@@ -150,11 +155,11 @@ export function SpriteAnimationPage() {
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="controls">
                 <Settings className="mr-2 h-4 w-4" />
-                Ajustes
+                {t("tabs.settings")}
               </TabsTrigger>
               <TabsTrigger value="color">
                 <Palette className="mr-2 h-4 w-4" />
-                Cores
+                {t("tabs.colors")}
               </TabsTrigger>
             </TabsList>
 
@@ -163,12 +168,17 @@ export function SpriteAnimationPage() {
 
               <Card className="mt-6">
                 <CardHeader>
-                  <CardTitle>Resolução da Exportação</CardTitle>
+                  <CardTitle>{t("resolution.title")}</CardTitle>
                   <CardDescription>
                     {(() => {
                       const size = getExpectedOutputSize();
-                      if (!size) return "Carregue um sprite para ver as dimensões de saída.";
-                      return `Frame: ${size.frameW}×${size.frameH}px · Sheet: ${size.totalW}×${size.totalH}px`;
+                      if (!size) return t("resolution.hint");
+                      return t("resolution.info", {
+                        frameW: size.frameW,
+                        frameH: size.frameH,
+                        totalW: size.totalW,
+                        totalH: size.totalH,
+                      });
                     })()}
                   </CardDescription>
                 </CardHeader>
@@ -180,13 +190,13 @@ export function SpriteAnimationPage() {
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione a resolução" />
+                      <SelectValue placeholder={t("resolution.placeholder")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="0.5">Baixa (0.5×)</SelectItem>
-                      <SelectItem value="1">Original (1×)</SelectItem>
-                      <SelectItem value="2">Alta (2×)</SelectItem>
-                      <SelectItem value="4">Máxima (4×)</SelectItem>
+                      <SelectItem value="0.5">{t("resolution.low")}</SelectItem>
+                      <SelectItem value="1">{t("resolution.original")}</SelectItem>
+                      <SelectItem value="2">{t("resolution.high")}</SelectItem>
+                      <SelectItem value="4">{t("resolution.max")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </CardContent>
@@ -196,7 +206,7 @@ export function SpriteAnimationPage() {
             <TabsContent value="color">
               <Card>
                 <CardHeader>
-                  <CardTitle>Cor de Fundo</CardTitle>
+                  <CardTitle>{t("background.title")}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ColorPicker
