@@ -1,42 +1,87 @@
-import { ForwardedRef, forwardRef, memo } from "react";
+import { ForwardedRef, forwardRef, memo, useState } from "react";
 
 interface SpritePreviewProps {
     spriteSrc: string;
     backgroundColor?: string;
 }
 
-export const SpritePreview = memo(forwardRef<HTMLImageElement, SpritePreviewProps>(
-    ({ spriteSrc, backgroundColor }, ref: ForwardedRef<HTMLImageElement>) => (
-        <div
-            id="sprite-preview"
-            style={{
-                backgroundColor,
-                width: "160px",
-                height: "160px",
-                margin: "10px auto",
-                border: "2px solid #333",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                overflow: "hidden"
-            }}
-        >
-            {spriteSrc ? (
-                <img
-                    ref={ref}
-                    src={spriteSrc}
-                    alt="Sprite"
-                    style={{
-                        maxWidth: "100%",
-                        maxHeight: "100%"
-                    }}
-                />
-            ) : (
-                <p>Sem Sprite</p>
-            )}
-        </div>
-    )
-));
+export const SpritePreview = memo(
+    forwardRef<HTMLImageElement, SpritePreviewProps>(
+        ({ spriteSrc, backgroundColor }, ref: ForwardedRef<HTMLImageElement>) => {
+            const [imgInfo, setImgInfo] = useState<{
+                w: number;
+                h: number;
+            } | null>(null);
 
-// Adiciona display name para melhor debugging
+            return (
+                <div className="flex flex-col items-center gap-2">
+                    <div
+                        id="sprite-preview"
+                        style={{
+                            backgroundColor,
+                            border: "2px solid hsl(var(--border))",
+                            borderRadius: "8px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            overflow: "hidden",
+                            /* Deixa o container crescer com a imagem, mas limita o preview a 320px */
+                            maxWidth: "320px",
+                            maxHeight: "320px",
+                            width: "100%",
+                            aspectRatio: imgInfo ? `${imgInfo.w} / ${imgInfo.h}` : "1 / 1",
+                            margin: "0 auto",
+                        }}
+                    >
+                        {spriteSrc ? (
+                            <img
+                                ref={ref}
+                                src={spriteSrc}
+                                alt="Sprite"
+                                onLoad={(e) =>
+                                    setImgInfo({
+                                        w: e.currentTarget.naturalWidth,
+                                        h: e.currentTarget.naturalHeight,
+                                    })
+                                }
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "contain",
+                                    imageRendering: "pixelated",
+                                }}
+                            />
+                        ) : (
+                            <div className="flex flex-col items-center justify-center gap-2 p-8 text-muted-foreground">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-10 w-10 opacity-30"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={1.5}
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    />
+                                </svg>
+                                <span className="text-sm">Nenhum sprite carregado</span>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Dimensões reais da imagem */}
+                    {imgInfo && (
+                        <span className="text-xs text-muted-foreground tabular-nums">
+                            {imgInfo.w} × {imgInfo.h} px
+                        </span>
+                    )}
+                </div>
+            );
+        }
+    )
+);
+
 SpritePreview.displayName = "SpritePreview";

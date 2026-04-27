@@ -1,4 +1,3 @@
-// src/pages/SpriteAnimationPage.tsx
 
 import { useRef, useState } from "react";
 
@@ -44,7 +43,6 @@ import { useTheme } from "@/context/themeContext";
 export function SpriteAnimationPage() {
   const spriteRef = useRef<HTMLImageElement>(null);
 
-  // Mantendo todos os seus hooks e lógica de estado
   const {
     currentAnimation,
     speed,
@@ -62,7 +60,8 @@ export function SpriteAnimationPage() {
     exportProgress,
     resolutionScale,
     setResolutionScale,
-  } = useSpriteCapture(backgroundColor);
+    getExpectedOutputSize,
+  } = useSpriteCapture(backgroundColor, spriteRef);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const toggleTheme = (checked: boolean) => {
@@ -70,7 +69,6 @@ export function SpriteAnimationPage() {
     console.log("[SpriteAnimationPage] Tema alterado:", checked ? "dark" : "light");
   };
   return (
-    // O layout principal agora usa divs com Tailwind CSS
     <div className="container mx-auto p-4 sm:p-6 lg:p-8">
       <header className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold tracking-tight">PixelForge</h1>
@@ -78,14 +76,13 @@ export function SpriteAnimationPage() {
           <Sun className="h-5 w-5" />
           <Switch
             checked={theme === "dark"}
-            onCheckedChange={toggleTheme} // O Switch passa o booleano diretamente
+            onCheckedChange={toggleTheme}
           />
           <Moon className="h-5 w-5" />
         </div>
       </header>
 
       <main className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Coluna da Esquerda (Preview e Ações) */}
         <div className="lg:col-span-2 space-y-6">
           <Card>
             <CardHeader>
@@ -95,7 +92,6 @@ export function SpriteAnimationPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {/* O AnimationSelector é chamado aqui dentro */}
               <AnimationSelector
                 currentAnimation={currentAnimation}
                 animationDefs={animationDefs}
@@ -135,7 +131,6 @@ export function SpriteAnimationPage() {
           )}
         </div>
 
-        {/* Coluna da Direita (Controles em Abas) */}
         <div className="lg:col-span-1">
           <Tabs defaultValue="controls" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
@@ -150,16 +145,20 @@ export function SpriteAnimationPage() {
             </TabsList>
 
             <TabsContent value="controls">
-              {/* O componente AnimationControls já tem um Card, então ele funciona bem aqui. */}
               <AnimationControls speed={speed} onSpeedChange={setSpeed} />
 
-              {/* Adicionamos a Resolução em outro Card, logo abaixo, na mesma aba. */}
               <Card className="mt-6">
                 <CardHeader>
                   <CardTitle>Resolução da Exportação</CardTitle>
+                  <CardDescription>
+                    {(() => {
+                      const size = getExpectedOutputSize();
+                      if (!size) return "Carregue um sprite para ver as dimensões de saída.";
+                      return `Frame: ${size.frameW}×${size.frameH}px · Sheet: ${size.totalW}×${size.totalH}px`;
+                    })()}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-               
                   <Select
                     value={String(resolutionScale)}
                     onValueChange={(value) =>
@@ -170,10 +169,10 @@ export function SpriteAnimationPage() {
                       <SelectValue placeholder="Selecione a resolução" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="0.5">Baixa (0.5x)</SelectItem>
-                      <SelectItem value="1">Original (1x)</SelectItem>
-                      <SelectItem value="2">Alta (2x)</SelectItem>
-                      <SelectItem value="4">Máxima (4x)</SelectItem>
+                      <SelectItem value="0.5">Baixa (0.5×)</SelectItem>
+                      <SelectItem value="1">Original (1×)</SelectItem>
+                      <SelectItem value="2">Alta (2×)</SelectItem>
+                      <SelectItem value="4">Máxima (4×)</SelectItem>
                     </SelectContent>
                   </Select>
                 </CardContent>
@@ -189,7 +188,6 @@ export function SpriteAnimationPage() {
                   <ColorPicker
                     color={backgroundColor}
                     onChange={(hex) => {
-                      // Direct DOM update — zero React re-renders during drag
                       const preview = document.getElementById("sprite-preview");
                       if (preview) preview.style.backgroundColor = hex;
                     }}
@@ -202,7 +200,6 @@ export function SpriteAnimationPage() {
         </div>
       </main>
 
-      {/* Elementos escondidos permanecem os mesmos */}
       <input
         ref={fileInputRef}
         type="file"
