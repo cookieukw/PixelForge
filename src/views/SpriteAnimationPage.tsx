@@ -51,6 +51,7 @@ export function SpriteAnimationPage() {
     setCurrentAnimation,
     setSpeed,
     animationDefs,
+    reapplyAnimation,
   } = useAnimation(spriteRef);
   const { setTheme, theme } = useTheme();
   const { spriteSrc, handleFileChange } = useSpriteFile();
@@ -107,6 +108,7 @@ export function SpriteAnimationPage() {
                   spriteSrc={spriteSrc}
                   ref={spriteRef}
                   backgroundColor={backgroundColor}
+                  onImageLoad={reapplyAnimation}
                 />
               </div>
             </CardContent>

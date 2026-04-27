@@ -4,11 +4,12 @@ import { useTranslation } from "../i18n";
 interface SpritePreviewProps {
     spriteSrc: string;
     backgroundColor?: string;
+    onImageLoad?: () => void;
 }
 
 export const SpritePreview = memo(
     forwardRef<HTMLImageElement, SpritePreviewProps>(
-        ({ spriteSrc, backgroundColor }, ref: ForwardedRef<HTMLImageElement>) => {
+        ({ spriteSrc, backgroundColor, onImageLoad }, ref: ForwardedRef<HTMLImageElement>) => {
             const { t } = useTranslation();
             const [imgInfo, setImgInfo] = useState<{
                 w: number;
@@ -39,12 +40,13 @@ export const SpritePreview = memo(
                                 ref={ref}
                                 src={spriteSrc}
                                 alt="Sprite"
-                                onLoad={(e) =>
+                                onLoad={(e) => {
                                     setImgInfo({
                                         w: e.currentTarget.naturalWidth,
                                         h: e.currentTarget.naturalHeight,
-                                    })
-                                }
+                                    });
+                                    onImageLoad?.();
+                                }}
                                 style={{
                                     width: "100%",
                                     height: "100%",
