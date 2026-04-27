@@ -1,5 +1,4 @@
-// src/components/AnimationControls.tsx
-
+import { memo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
@@ -10,7 +9,7 @@ interface AnimationControlsProps {
     onSpeedChange: (value: number) => void;
 }
 
-export const AnimationControls: React.FC<AnimationControlsProps> = ({
+export const AnimationControls: React.FC<AnimationControlsProps> = memo(({
     speed,
     onSpeedChange,
 }) => (
@@ -37,4 +36,4 @@ export const AnimationControls: React.FC<AnimationControlsProps> = ({
             </div>
         </CardContent>
     </Card>
-);
+));

@@ -60,7 +60,7 @@ export const useSpriteCapture = (backgroundColor: string = "transparent") => {
         } finally {
             setIsExporting(false);
         }
-    }, [resolutionScale, backgroundColor]);
+    }, [resolutionScale]);
 
     const exportSpritesheet = useCallback(async () => {
         await captureFramesForExport();

@@ -1,5 +1,6 @@
 // src/components/AnimationSelector.tsx
 
+import { memo } from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { AnimationDefinition } from "../classes/types";
 
@@ -9,7 +10,7 @@ interface AnimationSelectorProps {
   onSelect: (animation: string) => void;
 }
 
-export const AnimationSelector: React.FC<AnimationSelectorProps> = ({
+export const AnimationSelector: React.FC<AnimationSelectorProps> = memo(({
   currentAnimation,
   animationDefs,
   onSelect,
@@ -41,4 +42,4 @@ export const AnimationSelector: React.FC<AnimationSelectorProps> = ({
       </div>
     </div>
   );
-};
+});

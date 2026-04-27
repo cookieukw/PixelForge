@@ -188,7 +188,12 @@ export function SpriteAnimationPage() {
                 <CardContent>
                   <ColorPicker
                     color={backgroundColor}
-                    onChangeComplete={(color) => setBackgroundColor(color.hex)}
+                    onChange={(hex) => {
+                      // Direct DOM update — zero React re-renders during drag
+                      const preview = document.getElementById("sprite-preview");
+                      if (preview) preview.style.backgroundColor = hex;
+                    }}
+                    onChangeComplete={(hex) => setBackgroundColor(hex)}
                   />
                 </CardContent>
               </Card>

@@ -1,11 +1,11 @@
-import { ForwardedRef, forwardRef } from "react";
+import { ForwardedRef, forwardRef, memo } from "react";
 
 interface SpritePreviewProps {
     spriteSrc: string;
     backgroundColor?: string;
 }
 
-export const SpritePreview = forwardRef<HTMLImageElement, SpritePreviewProps>(
+export const SpritePreview = memo(forwardRef<HTMLImageElement, SpritePreviewProps>(
     ({ spriteSrc, backgroundColor }, ref: ForwardedRef<HTMLImageElement>) => (
         <div
             id="sprite-preview"
@@ -36,7 +36,7 @@ export const SpritePreview = forwardRef<HTMLImageElement, SpritePreviewProps>(
             )}
         </div>
     )
-);
+));
 
 // Adiciona display name para melhor debugging
 SpritePreview.displayName = "SpritePreview";

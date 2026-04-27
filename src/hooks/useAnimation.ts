@@ -32,7 +32,7 @@ export const useAnimation = (spriteRef: React.RefObject<HTMLImageElement>) => {
                 element.style.animationDuration = "";
             }
         }
-    });
+    }, [currentAnimation, speed, spriteRef]);
 
     return {
         currentAnimation,
