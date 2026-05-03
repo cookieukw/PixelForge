@@ -86,6 +86,6 @@ export const en = {
         slideOutRight: "The element slides from right to left while disappearing.",
         slideOutUp: "The element slides from bottom to top while disappearing.",
     },
-} as const;
+};
 
 export type Translation = typeof en;

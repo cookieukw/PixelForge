@@ -159,7 +159,7 @@ export const useSpriteCapture = (
                 const href =
                     typeof data === "string"
                         ? data
-                        : URL.createObjectURL(new Blob([data], { type: mimeType }));
+                        : URL.createObjectURL(new Blob([data as any], { type: mimeType }));
                 const link = document.createElement("a");
                 link.download = fileName;
                 link.href = href;
