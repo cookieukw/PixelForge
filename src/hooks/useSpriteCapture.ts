@@ -125,31 +125,6 @@ export const useSpriteCapture = (
         [imgRef, resolutionScale, backgroundColor]
     );
 
-    // ── setTimeout-based capture (OBSOLETE for main exports, kept for internal ref) ──
-
-    const captureViaTimeout = useCallback(
-        (totalFrames: number, intervalMs: number): Promise<ImageBitmap[]> => {
-            return new Promise(async (resolve) => {
-                const frames: ImageBitmap[] = [];
-                setIsExporting(true);
-                setExportProgress(0);
-
-                for (let i = 0; i < totalFrames; i++) {
-                    await new Promise(r => setTimeout(r, intervalMs));
-                    const img = imgRef?.current;
-                    if (img) {
-                        const bmp = captureFrameNow(img, resolutionScale, backgroundColor);
-                        if (bmp) frames.push(bmp);
-                    }
-                    setExportProgress(((i + 1) / totalFrames) * 100);
-                }
-
-                setIsExporting(false);
-                resolve(frames);
-            });
-        },
-        [imgRef, resolutionScale, backgroundColor]
-    );
 
     // ── Helper: download on web / save on mobile ───────────────────────────────
 
