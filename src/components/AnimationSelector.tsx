@@ -88,7 +88,7 @@ export const AnimationSelector: React.FC<AnimationSelectorProps> = memo(
                 key={key}
                 value={key}
                 aria-label={key}
-                className="capitalize shrink-0 px-3 h-8 text-xs font-medium"
+                className="capitalize shrink-0 px-4 h-8 text-xs font-medium whitespace-nowrap flex-none w-auto"
               >
                 {key}
               </ToggleGroupItem>

@@ -94,7 +94,7 @@ export function SpriteAnimationPage() {
         <div className="lg:col-span-2 space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="capitalize">{currentAnimation}</CardTitle>
+              <CardTitle className="capitalize truncate">{currentAnimation}</CardTitle>
               <CardDescription className="h-12">
                 {t(`animations.${currentAnimation}`)}
               </CardDescription>
