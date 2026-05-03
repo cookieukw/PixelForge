@@ -64,6 +64,8 @@ export function SpriteAnimationPage() {
     exportProgress,
     resolutionScale,
     setResolutionScale,
+    frameCount,
+    setFrameCount,
     getExpectedOutputSize,
   } = useSpriteCapture(backgroundColor, spriteRef, t);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -199,6 +201,31 @@ export function SpriteAnimationPage() {
                       <SelectItem value="1">{t("resolution.original")}</SelectItem>
                       <SelectItem value="2">{t("resolution.high")}</SelectItem>
                       <SelectItem value="4">{t("resolution.max")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </CardContent>
+              </Card>
+
+              <Card className="mt-6">
+                <CardHeader>
+                  <CardTitle>{t("smoothness.title")}</CardTitle>
+                  <CardDescription>
+                    {t("smoothness.info", { count: frameCount })}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Select
+                    value={String(frameCount)}
+                    onValueChange={(value) => setFrameCount(Number(value))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="10">{t("smoothness.low")}</SelectItem>
+                      <SelectItem value="20">{t("smoothness.medium")}</SelectItem>
+                      <SelectItem value="30">{t("smoothness.high")}</SelectItem>
+                      <SelectItem value="60">{t("smoothness.ultra")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </CardContent>

@@ -31,6 +31,14 @@ export const en = {
         max: "Maximum (4×)",
         placeholder: "Select resolution",
     },
+    smoothness: {
+        title: "Animation Smoothness",
+        info: "{count} frames",
+        low: "Basic (10 frames)",
+        medium: "Smooth (20 frames)",
+        high: "Very Smooth (30 frames)",
+        ultra: "Cinematic (60 frames)",
+    },
     background: {
         title: "Background Color",
     },

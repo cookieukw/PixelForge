@@ -4,8 +4,6 @@ import { Filesystem, Directory } from "@capacitor/filesystem";
 import { Toast } from "@capacitor/toast";
 import { Capacitor } from "@capacitor/core";
 
-/** Frames tiled side-by-side in the PNG spritesheet */
-const SPRITESHEET_FRAMES = 10;
 /** Frames recorded for the GIF (≈1 s at 60fps display rate) */
 const GIF_FRAMES = 60;
 
@@ -79,6 +77,7 @@ export const useSpriteCapture = (
     const [isExporting, setIsExporting] = useState(false);
     const [exportProgress, setExportProgress] = useState(0);
     const [resolutionScale, setResolutionScale] = useState<0.5 | 1 | 2 | 4>(1);
+    const [frameCount, setFrameCount] = useState<number>(20);
 
     // ── RAF-based capture ──────────────────────────────────────────────────────
     // Captures `totalFrames` frames in sync with the browser's paint loop.
@@ -126,7 +125,7 @@ export const useSpriteCapture = (
         [imgRef, resolutionScale, backgroundColor]
     );
 
-    // ── setTimeout-based capture (PNG spritesheet, 10 frames is enough) ───────
+    // ── setTimeout-based capture (OBSOLETE for main exports, kept for internal ref) ──
 
     const captureViaTimeout = useCallback(
         (totalFrames: number, intervalMs: number): Promise<ImageBitmap[]> => {
@@ -201,8 +200,8 @@ export const useSpriteCapture = (
     const exportSpritesheet = useCallback(async () => {
         if (!canvasRef.current) return;
 
-        // 10 frames spread across 1.5 s is enough for a side-by-side tile sheet
-        const frames = await captureViaTimeout(SPRITESHEET_FRAMES, 150);
+        // Use high-precision RAF capture for the spritesheet as well.
+        const { frames } = await captureViaRAF(frameCount);
 
         if (!frames.length) {
             alert(t("alerts.noFrames"));
@@ -232,7 +231,7 @@ export const useSpriteCapture = (
 
         const dataUrl = canvas.toDataURL("image/png");
         await saveFile(dataUrl, `spritesheet-${Date.now()}.png`, "image/png");
-    }, [captureViaTimeout, backgroundColor, saveFile]);
+    }, [captureViaRAF, frameCount, backgroundColor, saveFile]);
 
     // ── Export: Animated GIF at ~60fps ────────────────────────────────────────
     //
@@ -296,10 +295,10 @@ export const useSpriteCapture = (
         return {
             frameW: Math.round(img.naturalWidth * resolutionScale),
             frameH: Math.round(img.naturalHeight * resolutionScale),
-            totalW: Math.round(img.naturalWidth * resolutionScale) * SPRITESHEET_FRAMES,
+            totalW: Math.round(img.naturalWidth * resolutionScale) * frameCount,
             totalH: Math.round(img.naturalHeight * resolutionScale),
         };
-    }, [imgRef, resolutionScale]);
+    }, [imgRef, resolutionScale, frameCount]);
 
     return {
         canvasRef,
@@ -309,6 +308,8 @@ export const useSpriteCapture = (
         exportProgress,
         resolutionScale,
         setResolutionScale,
+        frameCount,
+        setFrameCount,
         getExpectedOutputSize,
     };
 };
